@@ -49,6 +49,26 @@ namespace APPBUSCACEP.Service
             }
             return arr_bairros;
         }
+
+        public static async Task<List<Lougradouro>> GetLougradourosByBairroAndIdCidade(string bairro, int id_cidade)
+        {
+            List<Lougradouro> arr_lougradouros = new List<Lougradouro>();
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("htts://cep.metoda.com.br/lougradouro/by-bairro?id_cidade=4874&bairro= Jardim" + id_cidade + "&bairro" + bairro);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = response.Content.ReadAsStringAsync().Result;
+
+                    arr_lougradouros = JsonConvert.DeserializeObject<List<Lougradouro>>(json);
+                }
+                else
+                    throw new Exception(response.RequestMessage.Content.ToString());
+            }
+            return arr_lougradouros;
+        }
     }
 
 }
