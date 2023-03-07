@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace APPBUSCACEP.Service
 {
@@ -38,8 +39,8 @@ namespace APPBUSCACEP.Service
                 HttpResponseMessage response = await client.GetAsync("https://cep.metoda.com.br/bairro/by-cidade?id_cidade" + id_cidade);
 
 
-                 if (response.IsSuccessStatusCode)
-                 {
+                if (response.IsSuccessStatusCode)
+                {
                     string json = response.Content.ReadAsStringAsync().Result;
 
                     arr_bairros = JsonConvert.DeserializeObject<List<Bairro>>(json);
@@ -50,24 +51,63 @@ namespace APPBUSCACEP.Service
             return arr_bairros;
         }
 
-        public static async Task<List<Lougradouro>> GetLougradourosByBairroAndIdCidade(string bairro, int id_cidade)
+        public static async Task<List<Logradouro>> GetLogradourosByBairroAndIdCidade(string bairro, int id_cidade)
         {
-            List<Lougradouro> arr_lougradouros = new List<Lougradouro>();
+            List<Logradouro> arr_lougradouros = new List<Logradouro>();
+
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync("htts://cep.metoda.com.br/lougradouro/by-bairro?id_cidade=4874&bairro= Jardim" + id_cidade + "&bairro" + bairro);
+                HttpResponseMessage response = await client.GetAsync("https://cep.metoda.com.br/lougradouro/by-bairro?id_cidade=4874&bairro=Jardim" + id_cidade + "&bairro" + bairro);
 
 
                 if (response.IsSuccessStatusCode)
                 {
                     string json = response.Content.ReadAsStringAsync().Result;
 
-                    arr_lougradouros = JsonConvert.DeserializeObject<List<Lougradouro>>(json);
+                    arr_lougradouros = JsonConvert.DeserializeObject<List<Logradouro>>(json);
                 }
                 else
                     throw new Exception(response.RequestMessage.Content.ToString());
             }
             return arr_lougradouros;
+        }
+        public static async Task<List<Cidade>> GetCidadesByEstado(string uf)
+        {
+            List<Cidade> arr_cidades = new List<Cidade>();
+
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("https://cep.metoda.com.br/cidade/by-uf?uf" + uf);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = response.Content.ReadAsStringAsync().Result;
+
+                    arr_cidades = JsonConvert.DeserializeObject<List<Cidade>>(json);
+                }
+                else
+                    throw new Exception(response.RequestMessage.Content.ToString());
+            }
+            return arr_cidades;
+        }
+        public static async Task<List<Cep>> GetCepsByLogradouro(string logradouro)
+        {
+            List<Cep> arr_ceps = new List<Cep>();
+
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("https://cep.metoda.com.br/cep/by-logradouro?Logradouro" + logradouro);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = response.Content.ReadAsStringAsync().Result;
+
+                    arr_ceps = JsonConvert.DeserializeObject<List<Cep>>(json);
+                }
+                else
+                    throw new Exception(response.RequestMessage.Content.ToString());
+            }
+            return arr_ceps;
         }
     }
 
